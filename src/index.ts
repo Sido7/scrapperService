@@ -5,6 +5,9 @@ import dotenv from 'dotenv'
 import connectDb from './config/mongo.config.js';
 import schedulerService from './services/scheduler.service.js';
 
+
+
+
 dotenv.config()
 
 const Port  = process.env.port || 4000
@@ -24,9 +27,9 @@ app.listen(Port, async () => {
     await connectDb()
     console.log(`⚡ Server listening on port ${Port}`);
     console.log(`Access the service at http://localhost:${Port}`);
-   
     const instance  = schedulerService.getInstance()
     await instance.initJob()
+    
    
 });
 

@@ -1,8 +1,10 @@
 import Parser from 'rss-parser';
 import IWebsite from '../interfaces/IWebsite';
-import { CreateIArticleInput } from '../interfaces/IArticle';
+import IArticle, { CreateIArticleInput } from '../interfaces/IArticle';
 import {Article} from '../models/article';
 import Website from '../models/website';
+import { publishArticleForProcessing, IArticleJob} from '../services/queue.service';
+
 
 
 const parser = new Parser();
@@ -17,7 +19,7 @@ const fetchRSS = async(webinfo: IWebsite) =>{
     try{
     const fetchedData = await parser.parseURL(url)
     let article  =  fetchedData.items.map((item)=> ({
-       source_article_id: item?.guid || item?.link,
+       source_article_id: item?.guid || item?.link || '',
          website_id: webinfo._id,
          title: titleSanitize(item[`${webinfo.selectors?.title}`]),
          content: item[`${webinfo.selectors?.content}`],
@@ -29,7 +31,18 @@ const fetchRSS = async(webinfo: IWebsite) =>{
          status: 'raw'
     })
 )
-await Article.insertMany(article)
+const result =await Article.insertMany(article)
+if(result){
+  result.forEach( async (article) => {
+    const jobPayload: IArticleJob = {
+        articleId: article._id.toString(),
+        websiteId: article.website_id.toString(),
+    }
+     publishArticleForProcessing(jobPayload)
+})
+}
+
+
 await Website.updateOne({_id:webinfo._id},{last_fetched_at: new Date(), last_successful_fetch: new Date()})
 
     }catch(error){

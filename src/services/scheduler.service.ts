@@ -26,7 +26,7 @@ class SchedulerService{
     }
 
    private getCronExpression(website: IWebsite): string {
-          return `02 14 * * 01`//`0 */${website.frequency} * * *`
+          return `29 17 * * 03`//`0 */${website.frequency} * * *`
    }
 
     public async scheduleJob(website: IWebsite): Promise<void>{

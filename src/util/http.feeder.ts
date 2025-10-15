@@ -8,6 +8,7 @@ import { Article } from '../models/article';
 import Website from '../models/website';
 import { Types } from 'mongoose';
 import { fetchWithRetry } from './fetchWithRetry';
+import { IArticleJob, publishArticleForProcessing } from '../services/queue.service';
 
 
 async function fetchHTML(webinfo: IWebsite): Promise<void>{
@@ -55,7 +56,15 @@ const article: CreateIArticleInput = {
          status: 'raw'
 }
 
-await Article.insertOne(article)
+const result = await Article.insertOne(article)
+if(result){
+  const jobPayload: IArticleJob = {
+          articleId: result._id.toString(),
+          websiteId:  result.website_id.toString(),
+      }
+  await Website.updateOne({_id:website_id},{last_fetched_at: new Date(), last_successful_fetch: new Date()})
+  await publishArticleForProcessing(jobPayload)
+}
   }catch(error){
     console.log(error)
     throw error
