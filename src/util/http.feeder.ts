@@ -56,7 +56,7 @@ const article: CreateIArticleInput = {
          status: 'raw'
 }
 
-const result = await Article.insertOne(article)
+const result = await Article.create(article)
 if(result){
   const jobPayload: IArticleJob = {
           articleId: result._id.toString(),
