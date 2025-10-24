@@ -39,9 +39,9 @@ export const websiteData: WebsiteCreateInput[] = [
     type: "rss"
   },
   {
-    name: "BBC News - World",
-    url: "http://feeds.bbci.co.uk/news/world/rss.xml",
-    category: "World",
+    name: "Everyday Fiction",
+    url: "https://everydayfiction.com/feed",
+    category: "Fiction",
     frequency: 24,
     selectors: {
       title: "title",
@@ -55,25 +55,9 @@ export const websiteData: WebsiteCreateInput[] = [
      type: "rss"
   },
   {
-    name: "NDTV Latest News",
-    url: "https://feeds.feedburner.com/ndtvnews-latest",
-    category: "News",
-    frequency: 6,
-    selectors: {
-      title: "title",
-      link: "link",
-      pubDate: "pubDate",
-      raw_content: "content",
-      content: "contentSnippet",
-    },
-    is_active: true,
-    failure_count: 0,
-     type: "rss"
-  },
-  {
-    name: "AI Trends",
-    url: "https://www.aitrends.com/feed/",
-    category: "Artificial Intelligence",
+    name: "Flash Fiction Magazine",
+    url: "https://flashfictionmagazine.com/feed/",
+    category: "Fiction",
     frequency: 24,
     selectors: {
       title: "title",
