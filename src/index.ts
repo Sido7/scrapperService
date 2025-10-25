@@ -18,8 +18,8 @@ app.get('/', (req: Request, res: Response) => {
   res.status(200).json({ message: 'Content Aggregation Service is running.', dbStatus: 'Pending' });
 });
 
-app.get('/health', (req, res) => {
-    res.send('Hello from Aggregator Service!');
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
 });
 
  function main(){
