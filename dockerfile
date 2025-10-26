@@ -2,10 +2,8 @@
 
 FROM node:22-alpine AS builder
 
-RUN addgroup -g 1001 appgroup
-RUN adduser -u 1001 -G appgroup -D appuser
+RUN addgroup -g 1001 appgroup && adduser -u 1001 -G appgroup -D appuser
 
-#USER appuser
 
 WORKDIR /app
 
@@ -22,7 +20,7 @@ RUN npm run build
 
 #Production Stage
 FROM node:22-alpine AS production
-
+RUN addgroup -g 1001 appgroup && adduser -u 1001 -G appgroup -D appuser
 # Add timezone support (optional but useful for cron)
 RUN apk add --no-cache tzdata \
   && cp /usr/share/zoneinfo/Asia/Kolkata /etc/localtime \
@@ -30,6 +28,7 @@ RUN apk add --no-cache tzdata \
 ENV TZ=Asia/Kolkata
 
 USER appuser
+
 WORKDIR /app
 
 COPY --from=builder /app/node_modules ./node_modules
